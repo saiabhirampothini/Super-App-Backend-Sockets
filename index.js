@@ -16,18 +16,16 @@ const io = socketIo(server, {
     credentials: true,
   },
 });
-
 app.use(express.json({ extended: false }));
-
-// For cross-origin access
+//For cross-origin access
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://super-app-frontend-eight.vercel.app",
     credentials: true,
   })
-);
+); //Enables the inclusion of cookies for CORS
 
-// For cookies
+//For cookies
 app.use(cookieParser());
 
 // Create a map to store userData
