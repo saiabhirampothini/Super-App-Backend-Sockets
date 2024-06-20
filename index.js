@@ -3,6 +3,7 @@ const socketIo = require("socket.io");
 const cors = require("cors");
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 
 //Create Server for socket
 const ioServer = http.createServer();
@@ -66,7 +67,7 @@ io.on("connection", (socket) => {
 });
 
 // //IO sever on another port
-const IO_PORT = process.env.PORT || 4000;
+const IO_PORT = process.env.PORT || 5000;
 
 ioServer.listen(IO_PORT, () => {
   console.log(`Socket.IO server is running on port ${IO_PORT}`);
