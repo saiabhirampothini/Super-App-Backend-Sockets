@@ -2,33 +2,41 @@ const http = require("http");
 const socketIo = require("socket.io");
 const cors = require("cors");
 const express = require("express");
-const app = express();
 const cookieParser = require("cookie-parser");
 
-//Create Server for socket
-const ioServer = http.createServer();
-const io = socketIo(ioServer, {
+const app = express();
+
+// Create HTTP server and integrate it with the Express app
+const server = http.createServer(app);
+
+// Integrate Socket.IO with the same server
+const io = socketIo(server, {
   cors: {
     origin: "*",
     credentials: true,
   },
 });
+
 app.use(express.json({ extended: false }));
-//For cross-origin access
+
+// For cross-origin access
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
-); //Enables the inclusion of cookies for CORS
+);
 
-//For cookies
+// For cookies
 app.use(cookieParser());
-//Create a map to store userData
+
+// Create a map to store userData
 global.onlineUsers = new Map();
+
 app.get("/", async (req, res) => {
   res.send("Socket Api Running..");
 });
+
 app.get("/api/chat/close-chat", async (req, res) => {
   try {
     const { userID } = req.body;
@@ -42,7 +50,7 @@ app.get("/api/chat/close-chat", async (req, res) => {
   }
 });
 
-//For sockets
+// For sockets
 io.on("connection", (socket) => {
   console.log("connect to socket", socket.id);
   global.chatSocket = socket;
@@ -66,9 +74,9 @@ io.on("connection", (socket) => {
   });
 });
 
-// //IO sever on another port
-const IO_PORT = process.env.PORT || 5000;
+// Server port
+const PORT = process.env.PORT || 5000;
 
-ioServer.listen(IO_PORT, () => {
-  console.log(`Socket.IO server is running on port ${IO_PORT}`);
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
